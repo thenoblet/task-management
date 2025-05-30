@@ -1,0 +1,9 @@
+services:
+  task-manager:
+    build: .
+    container_name: task-manager
+    ports:
+      - "6479:6379"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    restart: unless-stopped
