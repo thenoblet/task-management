@@ -81,7 +81,8 @@ Interactive API documentation is available at:
 http://localhost:8080/swagger-ui.html
 ```
 
-![Swagger UI Preview](docs/swagger-preview.png)
+![Swagger UI Preview](https://github.com/user-attachments/assets/3c4af18c-7554-488e-be5a-9f16f8215592)
+
 
 ## API Endpoints 🌐
 
