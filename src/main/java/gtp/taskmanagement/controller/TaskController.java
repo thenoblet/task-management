@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * REST controller for managing tasks in the system.
+ * Provides endpoints for CRUD operations and task filtering capabilities.
+ * All endpoints are prefixed with /api/v1/tasks.
+ */
 @RestController
 @RequestMapping("/api/v1/tasks")
 @Tag(name = "Task Controller", description = "Operations for managing tasks")
@@ -29,10 +33,20 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    /**
+     * Constructs a new TaskController with the required TaskService.
+     *
+     * @param taskService The service handling task business logic
+     */
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
+    /**
+     * Retrieves all tasks in the system.
+     *
+     * @return List of all tasks with HTTP 200 status
+     */
     @Operation(
             summary = "Get all tasks",
             description = "Retrieves a list of all tasks in the system",
@@ -52,6 +66,13 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getAllTasks());
     }
 
+
+    /**
+     * Retrieves a specific task by its ID.
+     *
+     * @param id UUID of the task to retrieve
+     * @return Requested task with HTTP 200 status
+     */
     @Operation(
             summary = "Get task by ID",
             description = "Retrieves a specific task by its unique identifier",
@@ -85,6 +106,13 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
+
+    /**
+     * Creates a new task in the system.
+     *
+     * @param request Task creation request containing task details
+     * @return Created task with HTTP 201 status
+     */
     @Operation(
             summary = "Create a new task",
             description = "Adds a new task to the system",
@@ -128,6 +156,14 @@ public class TaskController {
         );
     }
 
+
+    /**
+     * Fully updates an existing task.
+     *
+     * @param id UUID of the task to update
+     * @param request Task update request containing new values
+     * @return Updated task with HTTP 200 status
+     */
     @Operation(
             summary = "Update an entire task",
             description = "Replaces all fields of an existing task",
@@ -183,6 +219,14 @@ public class TaskController {
         return ResponseEntity.ok(taskService.updateTask(id, taskUpdates));
     }
 
+
+    /**
+     * Partially updates an existing task.
+     *
+     * @param id UUID of the task to update
+     * @param updates Task fields to update
+     * @return Updated task with HTTP 200 status
+     */
     @Operation(
             summary = "Partially update a task",
             description = "Updates specific fields of an existing task",
@@ -228,6 +272,13 @@ public class TaskController {
         return ResponseEntity.ok(taskService.patchTask(id, updates));
     }
 
+
+    /**
+     * Deletes a task from the system.
+     *
+     * @param id UUID of the task to delete
+     * @return Empty response with HTTP 204 status
+     */
     @Operation(
             summary = "Delete a task",
             description = "Removes a task from the system",
@@ -258,6 +309,13 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+
+    /**
+     * Filters tasks by their status.
+     *
+     * @param status Status to filter by
+     * @return List of matching tasks with HTTP 200 status
+     */
     @Operation(
             summary = "Filter tasks by status",
             description = "Retrieves tasks matching the specified status",
@@ -290,6 +348,13 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTasksByStatus(status));
     }
 
+
+    /**
+     * Filters tasks by their priority level.
+     *
+     * @param priority Priority level to filter by
+     * @return List of matching tasks with HTTP 200 status
+     */
     @Operation(
             summary = "Filter tasks by priority",
             description = "Retrieves tasks matching the specified priority level",

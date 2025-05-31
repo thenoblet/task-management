@@ -139,6 +139,120 @@ task-manager-api/
 └── pom.xml                      # Maven dependencies
 ```
 
+## Component Diagram 📊
+```mermaid
+graph TB
+    %% External Components
+    subgraph "Client Layer"
+        Client["Client Application<br/>HTTP Requests"]
+    end
+    
+    %% Spring Boot Framework
+    subgraph "Spring Boot Framework"
+        Dispatcher["DispatcherServlet"]
+        Actuator["Spring Actuator<br/>Health/Metrics"]
+        Swagger["Swagger UI<br/>API Documentation"]
+    end
+    
+    %% Configuration Layer
+    subgraph "Configuration"
+        DataInit["DataInit<br/>Initial Data Setup"]
+        SwaggerConfig["SwaggerConfig<br/>API Documentation Setup"]
+    end
+    
+    %% Controller Layer
+    subgraph "Controller Layer"
+        TaskController["TaskController<br/>REST Endpoints<br/>• @RestController<br/>• Request/Response mapping<br/>• Validation"]
+    end
+    
+    %% Service Layer
+    subgraph "Service Layer"
+        TaskService["TaskService (Interface)<br/>Business Contract"]
+        TaskServiceImpl["TaskServiceImpl<br/>• Business Logic<br/>• Transaction Management<br/>• Domain Rules"]
+    end
+    
+    %% Repository Layer
+    subgraph "Repository Layer"
+        TaskRepository["TaskRepository (Interface)<br/>Data Access Contract"]
+        TaskRepositoryImpl["TaskRepositoryImpl<br/>• In-Memory Storage<br/>• ConcurrentHashMap<br/>• CRUD Operations"]
+    end
+    
+    %% Data Transfer Objects
+    subgraph "DTOs"
+        TaskRequest["TaskRequest<br/>Input Validation"]
+        TaskResponse["TaskResponse<br/>Output Format"]
+        TaskUpdateRequest["TaskUpdateRequest<br/>Update Validation"]
+    end
+    
+    %% Domain Model
+    subgraph "Domain Model"
+        Task["Task<br/>Core Entity<br/>• Business Rules<br/>• State Management"]
+    end
+    
+    %% Exception Handling
+    subgraph "Exception Handling"
+        GlobalExceptionHandler["GlobalExceptionHandler<br/>• @ControllerAdvice<br/>• Centralized Error Handling"]
+        TaskNotFoundException["TaskNotFoundException<br/>Custom Business Exception"]
+    end
+    
+    %% Utilities
+    subgraph "Utilities"
+        Util["Util<br/>Helper Functions"]
+    end
+    
+    %% Main Application
+    subgraph "Application"
+        TaskManagementApp["TaskManagementApplication<br/>@SpringBootApplication<br/>Main Entry Point"]
+    end
+    
+    %% Relationships
+    Client --> Dispatcher
+    Dispatcher --> TaskController
+    TaskController --> TaskServiceImpl
+    TaskServiceImpl --> TaskRepositoryImpl
+    TaskRepositoryImpl --> Task
+    
+    TaskController --> TaskRequest
+    TaskController --> TaskResponse
+    TaskController --> TaskUpdateRequest
+    
+    TaskService --> TaskServiceImpl
+    TaskRepository --> TaskRepositoryImpl
+    
+    GlobalExceptionHandler --> TaskNotFoundException
+    TaskController --> GlobalExceptionHandler
+    
+    SwaggerConfig --> Swagger
+    DataInit --> TaskRepositoryImpl
+    
+    TaskManagementApp --> DataInit
+    TaskManagementApp --> SwaggerConfig
+
+%% Styling
+    classDef clientStyle fill:#00bcd4,stroke:#006064,color:#fff
+    classDef springStyle fill:#4caf50,stroke:#1b5e20,color:#fff
+    classDef configStyle fill:#ff9800,stroke:#e65100,color:#fff
+    classDef controllerStyle fill:#2196f3,stroke:#0d47a1,color:#fff
+    classDef serviceStyle fill:#9c27b0,stroke:#4a148c,color:#fff
+    classDef repoStyle fill:#8bc34a,stroke:#33691e,color:#fff
+    classDef dtoStyle fill:#00acc1,stroke:#004d40,color:#fff
+    classDef modelStyle fill:#ffc107,stroke:#f57c00,color:#000
+    classDef exceptionStyle fill:#f44336,stroke:#b71c1c,color:#fff
+    classDef utilStyle fill:#673ab7,stroke:#311b92,color:#fff
+    classDef appStyle fill:#3f51b5,stroke:#1a237e,color:#fff
+    
+    class Client clientStyle
+    class Dispatcher,Actuator,Swagger springStyle
+    class DataInit,SwaggerConfig configStyle
+    class TaskController controllerStyle
+    class TaskService,TaskServiceImpl serviceStyle
+    class TaskRepository,TaskRepositoryImpl repoStyle
+    class TaskRequest,TaskResponse,TaskUpdateRequest dtoStyle
+    class Task modelStyle
+    class GlobalExceptionHandler,TaskNotFoundException exceptionStyle
+    class Util utilStyle
+    class TaskManagementApp appStyle
+```
 ## Best Practices ✅
 
 - **Inversion of Control** through Spring DI
@@ -147,21 +261,3 @@ task-manager-api/
 - **Proper HTTP semantics** (status codes, methods)
 - **Comprehensive validation** on all inputs
 - **Containerization** for consistent deployments
-
-## Contributing 🤝
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License 📄
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-**Happy Task Managing!** 🎉
