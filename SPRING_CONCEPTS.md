@@ -195,7 +195,7 @@ public class TaskServiceImpl {
 |---------------------|----------------------------------------|--------------------------------|
 | `@Component`        | Generic Spring bean                   | Base for other stereotypes     |
 | `@Service`          | Business logic component              | `TaskServiceImpl`              |
-| `@Repository`       | Data access component                 | `InMemoryTaskRepository`       |
+| `@Repository`       | Data access component                 | `TaskRepository`       |
 | `@RestController`   | REST API controller                   | `TaskController`               |
 | `@Autowired`        | Dependency injection                  | Constructor injection          |
 | `@Configuration`    | Configuration class                   | `SwaggerConfig`                |
