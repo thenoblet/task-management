@@ -1,1 +1,2 @@
-web: java -jar target/tms-app.jar
+web: java -jar application.jar
+

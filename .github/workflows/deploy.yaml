@@ -36,13 +36,15 @@ jobs:
         id: package-name
         run: echo "package_name=deploy-${{ github.sha }}.zip" >> $GITHUB_OUTPUT
 
-      # Step 5: Prepare deployment bundle (only JAR + Procfile)
+      # Step 5: Create deployment bundle
       - name: Create deployment bundle
         run: |
           mkdir bundle
           cp target/*.jar bundle/application.jar
           echo "web: java -jar application.jar" > bundle/Procfile
-          cd bundle && zip -r ../${{ steps.package-name.outputs.package_name }} .
+          cd bundle
+          zip -r ../${{ steps.package-name.outputs.package_name }} application.jar Procfile
+
 
       # Step 6: Configure AWS credentials
       - name: Configure AWS Credentials
