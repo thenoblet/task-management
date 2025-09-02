@@ -1,0 +1,60 @@
+name: Deploy Spring Boot App to AWS Elastic Beanstalk
+
+# Triggers the workflow on push events for the "main" branch
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: "eu-central-1"
+      S3_BUCKET: "eb-java-lab-source-bucket"
+      EB_APPLICATION_NAME: "TMS-APP"
+      EB_ENVIRONMENT_NAME: "TMS-APP-env"
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # Step 2: Generate a timestamped zip file name for the deployment package
+      - name: Generate deployment package name
+        id: package-name
+        run: echo "package_name=deploy-${{ github.sha }}.zip" >> $GITHUB_OUTPUT
+
+      # Step 3: Create the ZIP archive of the application source code
+      # Elastic Beanstalk will use pom.xml to build the project on the server
+      - name: Create zip deployment package
+        run: zip -r ${{ steps.package-name.outputs.package_name }} . -x ".git/*" ".github/*"
+
+      # Step 4: Configure AWS credentials using secrets
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Step 5: Upload the deployment package to the S3 bucket
+      - name: Copy deployment package to S3 bucket
+        run: aws s3 cp ${{ steps.package-name.outputs.package_name }} s3://${{ env.S3_BUCKET }}/
+
+      # Step 6: Create a new application version in Elastic Beanstalk
+      - name: Create new Elastic Beanstalk application version
+        run: |
+          aws elasticbeanstalk create-application-version \
+          --application-name ${{ env.EB_APPLICATION_NAME }} \
+          --version-label "ver-${{ github.sha }}" \
+          --source-bundle S3Bucket="${{ env.S3_BUCKET }}",S3Key="${{ steps.package-name.outputs.package_name }}" \
+          --description "Commit ${{ github.sha }}"
+
+      # Step 7: Deploy the new version to the Elastic Beanstalk environment
+      - name: Deploy new version to Elastic Beanstalk environment
+        run: |
+          aws elasticbeanstalk update-environment \
+          --application-name ${{ env.EB_APPLICATION_NAME }} \
+          --environment-name ${{ env.EB_ENVIRONMENT_NAME }} \
+          --version-label "ver-${{ github.sha }}"
