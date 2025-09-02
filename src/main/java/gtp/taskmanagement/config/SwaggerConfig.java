@@ -27,8 +27,8 @@ public class SwaggerConfig {
     public OpenAPI taskManagerOpenAPI() {
         return new OpenAPI()
                 .addServersItem(new Server()
-                        .url("http://localhost:8080")
-                        .description("Local development server"))
+                        .url("http://tms-app-env.eba-d2idh7xk.eu-central-1.elasticbeanstalk.com/")
+                        .description("Production server"))
                 .info(new Info()
                         .title("Task Management API")
                         .description("API for managing tasks with full CRUD operations. "
