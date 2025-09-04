@@ -14,52 +14,47 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * REST Controller for serving the home page and general application information.
- * Separate from the Task API controller to maintain clean separation of concerns.
+ * REST Controller for serving the home page and general application
+ * information.
+ * Separate from the Task API controller to maintain clean separation of
+ * concerns.
  */
 @RestController
 @RequestMapping("/")
 @Tag(name = "Home Controller", description = "Serves the application home page and general information")
 public class HomePageController {
 
-    private final ResourceLoader resourceLoader;
+  private final ResourceLoader resourceLoader;
 
-    public HomePageController(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+  public HomePageController(ResourceLoader resourceLoader) {
+    this.resourceLoader = resourceLoader;
+  }
 
-    /**
-     * Returns the application home page with API information.
-     *
-     * @return HTML welcome page
-     */
-    @Operation(
-            summary = "Home page",
-            description = "Returns the application home page with API information and documentation links",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Home page displayed successfully"
-                    )
-            }
-    )
-    @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
-    public String home() {
-        try {
-            Resource resource = resourceLoader.getResource("classpath:templates/home.html");
-            return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            return """
-                    <!DOCTYPE html>
-                    <html>
-                    <head><title>Task Management API</title></head>
-                    <body>
-                        <h1>Task Management API</h1>
-                        <p>Welcome to the Task Management REST API</p>
-                        <p>Visit <a href="/swagger-ui.html">Swagger UI</a> for documentation</p>
-                    </body>
-                    </html>
-                    """;
-        }
+  /**
+   * Returns the application home page with API information.
+   *
+   * @return HTML welcome page
+   */
+  @Operation(summary = "Home page", description = "Returns the application home page with API information and documentation links", responses = {
+      @ApiResponse(responseCode = "200", description = "Home page displayed successfully")
+  })
+  @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
+  public String home() {
+    try {
+      Resource resource = resourceLoader.getResource("classpath:templates/home.html");
+      return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      return """
+          <!DOCTYPE html>
+          <html>
+          <head><title>Task Management API</title></head>
+          <body>
+              <h1>Task Management API</h1>
+              <p>Welcome to the Task Management REST API</p>
+              <p>Visit <a href="/swagger-ui.html">Swagger UI</a> for documentation</p>
+          </body>
+          </html>
+          """;
     }
+  }
 }
